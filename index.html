@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEP 해외연수 만찬 메뉴 설문</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    color: #3a3a3a;
+    min-height: 100vh;
+    background: #f0f4fa;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0; pointer-events: none;
+    background-image:
+      radial-gradient(circle at 10% 25%, rgba(100,149,237,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 90% 20%, rgba(255,182,193,0.08) 0%, transparent 45%),
+      radial-gradient(circle at 50% 75%, rgba(147,180,230,0.07) 0%, transparent 50%),
+      radial-gradient(circle at 25% 85%, rgba(255,200,200,0.06) 0%, transparent 40%),
+      radial-gradient(circle at 75% 65%, rgba(180,200,240,0.06) 0%, transparent 40%);
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative; z-index: 1;
+    background: linear-gradient(135deg, #3a6bd5 0%, #4a7ae8 40%, #5b88f0 100%);
+    padding: 0; overflow: hidden;
+  }
+
+  /* ===== SVG UNION JACK BACKGROUND ===== */
+  .hero-bg {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.12; pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center; padding: 34px 20px 58px;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.2); backdrop-filter: blur(8px);
+    padding: 5px 18px; border-radius: 20px;
+    font-size: 11.5px; font-weight: 600; color: #fff;
+    letter-spacing: 1px; margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  /* Mini Union Jack with CSS */
+  .mini-flag {
+    width: 24px; height: 16px; border-radius: 3px;
+    position: relative; overflow: hidden;
+    background: #012169; flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .mini-flag::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      /* Red cross */
+      linear-gradient(to right, transparent 10px, #C8102E 10px, #C8102E 14px, transparent 14px),
+      linear-gradient(to bottom, transparent 6px, #C8102E 6px, #C8102E 10px, transparent 10px),
+      /* White cross */
+      linear-gradient(to right, transparent 8px, #fff 8px, #fff 16px, transparent 16px),
+      linear-gradient(to bottom, transparent 4px, #fff 4px, #fff 12px, transparent 12px),
+      /* Diagonal lines (simplified) */
+      linear-gradient(26deg, transparent 30%, #fff 30%, #fff 34%, transparent 34%),
+      linear-gradient(-26deg, transparent 30%, #fff 30%, #fff 34%, transparent 34%),
+      linear-gradient(26deg, transparent 28%, #C8102E 28%, #C8102E 31%, transparent 31%),
+      linear-gradient(-26deg, transparent 28%, #C8102E 28%, #C8102E 31%, transparent 31%),
+      #012169;
+  }
+
+  .hero h1 {
+    font-size: 26px; font-weight: 800; color: #fff;
+    text-shadow: 0 2px 16px rgba(30,60,140,0.3);
+    line-height: 1.5; margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
+  .hero h1 .gep {
+    display: inline-block;
+    background: rgba(255,255,255,0.25); padding: 0 10px; border-radius: 8px;
+  }
+  .hero p {
+    font-size: 14px; color: rgba(255,255,255,0.8); font-weight: 400;
+  }
+
+  /* Wave */
+  .hero-wave { position: relative; z-index: 1; margin-top: -1px; }
+  .hero-wave svg { display: block; width: 100%; }
+
+  /* Floating UK stickers */
+  .uk-stickers {
+    position: relative; z-index: 1;
+    display: flex; justify-content: center; gap: 18px;
+    padding: 10px 0 4px; font-size: 20px; opacity: 0.7;
+  }
+  .uk-stickers span { display: inline-block; animation: bob 3s ease-in-out infinite; }
+  .uk-stickers span:nth-child(2) { animation-delay: 0.4s; }
+  .uk-stickers span:nth-child(3) { animation-delay: 0.8s; }
+  .uk-stickers span:nth-child(4) { animation-delay: 1.2s; }
+  .uk-stickers span:nth-child(5) { animation-delay: 1.6s; }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(3deg); }
+  }
+
+  /* ===== NAV ===== */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(58,107,213,0.08);
+    display: flex; justify-content: center;
+  }
+  .nav button {
+    flex: 1; max-width: 180px;
+    padding: 13px 16px;
+    border: none; background: none;
+    font-family: inherit; font-size: 13.5px; font-weight: 600;
+    color: #c0c8d8; cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    transition: all 0.2s;
+  }
+  .nav button.active { color: #3a6bd5; border-bottom-color: #3a6bd5; }
+  .nav button:hover { color: #7a9ee8; }
+
+  /* ===== CONTAINER ===== */
+  .container {
+    position: relative; z-index: 1;
+    max-width: 600px; margin: 0 auto; padding: 20px 16px 40px;
+  }
+
+  /* ===== NOTICE ===== */
+  .notice {
+    background: #fff;
+    border: 1.5px solid #dce5f5;
+    border-radius: 18px;
+    padding: 16px 18px; margin-bottom: 20px;
+    font-size: 13px; color: #5a6880; line-height: 1.9;
+    box-shadow: 0 2px 12px rgba(58,107,213,0.06);
+  }
+  .notice strong { font-weight: 700; color: #3a6bd5; }
+  .notice-title {
+    display: inline-block; background: #eef3ff; color: #3a6bd5;
+    padding: 3px 12px; border-radius: 10px; font-size: 12px;
+    font-weight: 700; margin-bottom: 8px;
+  }
+
+  /* ===== SECTION ===== */
+  .section {
+    background: #fff; border-radius: 22px;
+    padding: 22px 20px; margin-bottom: 14px;
+    box-shadow: 0 2px 16px rgba(58,107,213,0.05);
+    border: 1px solid rgba(58,107,213,0.04);
+  }
+  .section-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10.5px; font-weight: 800;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: #fff; padding: 4px 14px; border-radius: 20px; margin-bottom: 8px;
+  }
+  .badge-starter { background: linear-gradient(135deg, #66bb6a, #43a047); }
+  .badge-main { background: linear-gradient(135deg, #5b88f0, #3a6bd5); }
+  .badge-dessert { background: linear-gradient(135deg, #ce93d8, #ab47bc); }
+  
+  .section h2 { font-size: 18px; font-weight: 800; margin-bottom: 2px; }
+  .section .sub { font-size: 12px; color: #bbc5d5; margin-bottom: 14px; font-weight: 500; }
+
+  /* ===== MENU RADIO ===== */
+  .menu-radio { display: flex; flex-direction: column; gap: 6px; }
+  .menu-option {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 14px; border-radius: 16px; cursor: pointer;
+    border: 1.5px solid #eef1f8; transition: all 0.18s;
+    background: #fefefe;
+  }
+  .menu-option:hover { background: #f5f8ff; border-color: #c8d6f5; }
+  .menu-option.selected {
+    background: linear-gradient(135deg, #f0f5ff, #e8eeff);
+    border-color: #9db8f0;
+    box-shadow: 0 2px 10px rgba(58,107,213,0.1);
+  }
+  .menu-option input[type="radio"] { display: none; }
+  
+  .radio-dot {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    border: 2.5px solid #d0d8e8; display: flex; align-items: center;
+    justify-content: center; margin-top: 2px; transition: all 0.18s;
+  }
+  .radio-dot::after {
+    content: ''; width: 10px; height: 10px; border-radius: 50%;
+    background: transparent; transition: all 0.18s;
+  }
+  .menu-option.selected .radio-dot { border-color: #3a6bd5; }
+  .menu-option.selected .radio-dot::after { background: #3a6bd5; }
+  
+  .menu-info { flex: 1; }
+  .menu-en { font-size: 13.5px; font-weight: 600; line-height: 1.4; color: #3d4a5c; }
+  .menu-kr { font-size: 12.5px; color: #9aa5b8; margin-top: 1px; font-weight: 400; }
+  .menu-desc { font-size: 11.5px; color: #c5cdd8; margin-top: 1px; }
+  
+  .tag {
+    display: inline-block; font-size: 9px; padding: 2px 6px;
+    border-radius: 6px; margin-left: 3px; font-weight: 800; vertical-align: middle;
+  }
+  .tag-v { background: #e8f5e9; color: #43a047; }
+  .tag-vg { background: #e8f5e9; color: #2e7d32; }
+  .tag-gf { background: #fff3e0; color: #ef6c00; }
+  .tag-new { background: #e3f2fd; color: #1e88e5; }
+
+  .default-notice {
+    margin-top: 14px; padding: 12px 16px;
+    background: #fef5f5; border: 1.5px dashed #f0b0b0; border-radius: 16px;
+    font-size: 12.5px; color: #d05050; font-weight: 600; text-align: center;
+    line-height: 1.6;
+  }
+
+  /* ===== INPUT ===== */
+  .input-section { background: #f8faff; }
+  .field { margin-bottom: 16px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 13px; font-weight: 700; color: #7a88a0; margin-bottom: 6px; }
+  .field input {
+    width: 100%; padding: 12px 16px; border: 1.5px solid #dfe5f0;
+    border-radius: 14px; font-family: inherit; font-size: 14px;
+    transition: all 0.2s; background: #fff;
+  }
+  .field input:focus { outline: none; border-color: #7a9ee8; box-shadow: 0 0 0 3px rgba(58,107,213,0.08); }
+
+  /* ===== SUBMIT ===== */
+  .submit-btn {
+    display: block; width: 100%; padding: 16px;
+    background: linear-gradient(135deg, #5b88f0, #3a6bd5);
+    color: #fff; border: none;
+    border-radius: 18px; font-family: inherit;
+    font-size: 16px; font-weight: 800; cursor: pointer;
+    margin-top: 18px; transition: all 0.2s;
+    box-shadow: 0 4px 18px rgba(58,107,213,0.28);
+  }
+  .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(58,107,213,0.35); }
+  .submit-btn:active { transform: translateY(0); }
+
+  /* ===== SUCCESS ===== */
+  .success-box { text-align: center; padding: 60px 20px; }
+  .success-box .check { font-size: 64px; margin-bottom: 16px; }
+  .success-box h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; color: #3a6bd5; }
+  .success-box p { font-size: 14px; color: #aab5c8; font-weight: 400; line-height: 1.7; }
+
+  /* ===== RESULTS ===== */
+  .results-header { text-align: center; margin-bottom: 24px; }
+  .results-header h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .results-header p { font-size: 13px; color: #b0bcd0; }
+  .stat-count {
+    display: inline-block;
+    background: linear-gradient(135deg, #5b88f0, #3a6bd5);
+    color: #fff; padding: 5px 18px; border-radius: 20px;
+    font-size: 13px; font-weight: 800; margin-top: 8px;
+  }
+  .result-section {
+    background: #fff; border-radius: 22px;
+    padding: 22px; margin-bottom: 14px;
+    box-shadow: 0 2px 16px rgba(58,107,213,0.05);
+  }
+  .result-section h3 { font-size: 15px; font-weight: 800; margin-bottom: 16px; }
+  .bar-row { margin-bottom: 14px; }
+  .bar-label {
+    display: flex; justify-content: space-between;
+    font-size: 12.5px; margin-bottom: 5px;
+  }
+  .bar-label .name { font-weight: 600; color: #5a6880; }
+  .bar-label .count { font-weight: 800; color: #3a6bd5; }
+  .bar-track { width: 100%; height: 22px; background: #eef1f8; border-radius: 11px; overflow: hidden; }
+  .bar-fill {
+    height: 100%; border-radius: 11px; transition: width 0.5s ease;
+    display: flex; align-items: center; padding-left: 10px;
+    font-size: 10.5px; font-weight: 800; color: #fff; min-width: 0;
+  }
+  .bar-fill.starter { background: linear-gradient(90deg, #66bb6a, #43a047); }
+  .bar-fill.main { background: linear-gradient(90deg, #5b88f0, #3a6bd5); }
+  .bar-fill.dessert { background: linear-gradient(90deg, #ce93d8, #ab47bc); }
+  .response-list { margin-top: 16px; }
+  .response-card {
+    background: #f8faff; border-radius: 16px; padding: 14px 16px;
+    margin-bottom: 8px; font-size: 13px; border: 1px solid #eef1f8;
+  }
+  .response-card .rname { font-weight: 800; margin-bottom: 4px; color: #4a5568; }
+  .response-card .rdetail { color: #a0aec0; font-size: 12px; line-height: 1.6; }
+
+  /* ===== QR ===== */
+  .qr-page { text-align: center; padding: 20px 0; }
+  .qr-page h1 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+  .qr-page p { font-size: 13px; color: #b0bcd0; margin-bottom: 24px; line-height: 1.7; }
+  .qr-box {
+    display: inline-block; background: #fff; padding: 28px;
+    border-radius: 26px; box-shadow: 0 4px 24px rgba(58,107,213,0.08);
+    margin-bottom: 20px; border: 2px solid #e0e8f8;
+  }
+  .qr-box canvas { display: block; }
+  .url-display {
+    background: #f0f4ff; padding: 12px 18px; border-radius: 14px;
+    font-size: 12px; color: #8090b0; word-break: break-all;
+    margin-top: 16px; max-width: 400px; display: inline-block;
+    border: 1px solid #dce5f5;
+  }
+  .copy-btn {
+    display: inline-block; margin-top: 12px; padding: 11px 28px;
+    background: linear-gradient(135deg, #5b88f0, #3a6bd5);
+    color: #fff; border: none; border-radius: 14px;
+    font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 3px 12px rgba(58,107,213,0.2);
+  }
+  .copy-btn:hover { transform: translateY(-1px); }
+  .qr-instruction {
+    margin-top: 28px; text-align: left;
+    background: #fff; border-radius: 22px; padding: 22px;
+    box-shadow: 0 2px 16px rgba(58,107,213,0.05);
+  }
+  .qr-instruction h3 { font-size: 14px; font-weight: 800; margin-bottom: 12px; }
+  .qr-instruction ol { padding-left: 20px; font-size: 13px; color: #8a95a8; line-height: 2.1; }
+
+  .hidden { display: none; }
+  .refresh-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 8px 18px; background: #eef3ff; border: 1.5px solid #d0daf0;
+    border-radius: 14px; font-family: inherit; font-size: 12px;
+    font-weight: 700; color: #3a6bd5; cursor: pointer; margin-top: 10px;
+  }
+  .refresh-btn:hover { background: #e0eaff; }
+  .no-data { text-align: center; padding: 40px; color: #d0d8e8; font-size: 14px; }
+
+  /* ===== UNION JACK FLAG - LARGE HEADER SVG ===== */
+  .flag-corner {
+    position: absolute; z-index: 1;
+    width: 80px; height: 54px; border-radius: 8px;
+    overflow: hidden; opacity: 0.2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .flag-corner.left { top: 16px; left: 16px; transform: rotate(-8deg); }
+  .flag-corner.right { top: 16px; right: 16px; transform: rotate(8deg); }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <!-- Union Jack SVG BG -->
+  <svg class="hero-bg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <rect width="600" height="400" fill="#012169"/>
+    <!-- Diagonal whites -->
+    <polygon points="0,0 240,200 0,66" fill="#fff"/>
+    <polygon points="0,400 240,200 0,334" fill="#fff"/>
+    <polygon points="600,0 360,200 600,66" fill="#fff"/>
+    <polygon points="600,400 360,200 600,334" fill="#fff"/>
+    <!-- Diagonal reds -->
+    <polygon points="0,0 200,200 0,44" fill="#C8102E"/>
+    <polygon points="0,400 200,200 0,356" fill="#C8102E"/>
+    <polygon points="600,0 400,200 600,44" fill="#C8102E"/>
+    <polygon points="600,400 400,200 600,356" fill="#C8102E"/>
+    <!-- White cross -->
+    <rect x="250" y="0" width="100" height="400" fill="#fff"/>
+    <rect x="0" y="150" width="600" height="100" fill="#fff"/>
+    <!-- Red cross -->
+    <rect x="270" y="0" width="60" height="400" fill="#C8102E"/>
+    <rect x="0" y="170" width="600" height="60" fill="#C8102E"/>
+  </svg>
+
+  <!-- Mini flag corners -->
+  <div class="flag-corner left">
+    <svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+      <rect width="60" height="40" fill="#012169"/>
+      <polygon points="0,0 24,20 0,6.6" fill="#fff"/>
+      <polygon points="0,40 24,20 0,33.4" fill="#fff"/>
+      <polygon points="60,0 36,20 60,6.6" fill="#fff"/>
+      <polygon points="60,40 36,20 60,33.4" fill="#fff"/>
+      <rect x="25" y="0" width="10" height="40" fill="#fff"/>
+      <rect x="0" y="15" width="60" height="10" fill="#fff"/>
+      <rect x="27" y="0" width="6" height="40" fill="#C8102E"/>
+      <rect x="0" y="17" width="60" height="6" fill="#C8102E"/>
+    </svg>
+  </div>
+  <div class="flag-corner right">
+    <svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+      <rect width="60" height="40" fill="#012169"/>
+      <polygon points="0,0 24,20 0,6.6" fill="#fff"/>
+      <polygon points="0,40 24,20 0,33.4" fill="#fff"/>
+      <polygon points="60,0 36,20 60,6.6" fill="#fff"/>
+      <polygon points="60,40 36,20 60,33.4" fill="#fff"/>
+      <rect x="25" y="0" width="10" height="40" fill="#fff"/>
+      <rect x="0" y="15" width="60" height="10" fill="#fff"/>
+      <rect x="27" y="0" width="6" height="40" fill="#C8102E"/>
+      <rect x="0" y="17" width="60" height="6" fill="#C8102E"/>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="mini-flag"></span>
+      United Kingdom · GEP Dinner
+    </div>
+    <h1><span class="gep">GEP</span> 해외연수 만찬,<br>뭐 드실 건가요?</h1>
+    <p>메뉴 고르는 재미까지 연수의 일부! 취향 듬뿍 담아주세요 ✨</p>
+  </div>
+</div>
+
+<!-- Red-White-Blue stripe -->
+<div style="height:5px;display:flex;position:relative;z-index:1">
+  <div style="flex:1;background:#C8102E"></div>
+  <div style="flex:1;background:#fff"></div>
+  <div style="flex:1;background:#012169"></div>
+</div>
+
+<div class="hero-wave">
+  <svg viewBox="0 0 1440 50" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,20 C360,50 720,-5 1080,20 C1260,32 1380,25 1440,20 L1440,0 L0,0 Z" fill="#4a7ae8"/>
+    <path d="M0,28 C320,48 640,5 960,28 C1120,40 1320,18 1440,28 L1440,50 L0,50 Z" fill="#f0f4fa"/>
+  </svg>
+</div>
+
+<div class="uk-stickers">
+  <span>🎡</span><span>☕</span><span>🏰</span><span>🫖</span><span>☂️</span>
+</div>
+
+<nav class="nav">
+  <button id="nav-survey" class="active" onclick="showPage('survey')">📋 설문하기</button>
+  <button id="nav-results" onclick="showPage('results')">📊 결과보기</button>
+  <button id="nav-qr" onclick="showPage('qr')">📱 QR코드</button>
+</nav>
+
+<!-- ========== SURVEY ========== -->
+<div id="page-survey" class="container">
+  <div id="survey-form">
+    <div class="notice">
+      <div class="notice-title">📌 꼭 읽어주세요!</div>
+      • <strong>전식 &amp; 후식</strong>은 전체 인원이 동일 메뉴로 진행돼요 (다수결의 힘 💪)<br>
+      • <strong>메인</strong>은 개인별로 원하시는 메뉴를 골라주세요!<br>
+      • 메인은 <strong>확정 후 변경 불가</strong>하니 지금 꼭 응답해 주세요! 🙏
+    </div>
+
+    <!-- TO START -->
+    <div class="section">
+      <span class="section-badge badge-starter">🥗 TO START</span>
+      <h2>전채 요리</h2>
+      <p class="sub">전체 인원 동일 메뉴 · 선호하는 1가지를 골라주세요</p>
+      <div class="menu-radio" id="starter-group">
+        <label class="menu-option" onclick="sel(this,'starter')">
+          <input type="radio" name="starter" value="포토벨로 버섯 브루스케타">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Portobello Mushroom Bruschetta <span class="tag tag-v">채식</span></div>
+            <div class="menu-kr">포토벨로 버섯 브루스케타</div>
+            <div class="menu-desc">블루 치즈 소스</div>
+          </div>
+        </label>
+        <label class="menu-option" onclick="sel(this,'starter')">
+          <input type="radio" name="starter" value="구운 아스파라거스">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Grilled Asparagus <span class="tag tag-gf">글루텐프리</span></div>
+            <div class="menu-kr">구운 아스파라거스</div>
+            <div class="menu-desc">파르마 햄 · 파마산 치즈 · 발사믹 글레이즈</div>
+          </div>
+        </label>
+        <label class="menu-option" onclick="sel(this,'starter')">
+          <input type="radio" name="starter" value="크리스피 오징어 튀김">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Salt &amp; Pepper Crispy Squid</div>
+            <div class="menu-kr">솔트 앤 페퍼 크리스피 오징어 튀김</div>
+            <div class="menu-desc">라임 아이올리 소스</div>
+          </div>
+        </label>
+        <label class="menu-option" onclick="sel(this,'starter')">
+          <input type="radio" name="starter" value="비트 카르파초">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Beetroot Carpaccio <span class="tag tag-vg">비건</span> <span class="tag tag-gf">글루텐프리</span> <span class="tag tag-new">NEW</span></div>
+            <div class="menu-kr">비트 카르파초</div>
+            <div class="menu-desc">믹스 샐러드 채소</div>
+          </div>
+        </label>
+        <label class="menu-option" onclick="sel(this,'starter')">
+          <input type="radio" name="starter" value="당근 & 고수 스프">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Carrot &amp; Coriander Soup <span class="tag tag-vg">비건</span></div>
+            <div class="menu-kr">당근 &amp; 고수 스프</div>
+            <div class="menu-desc">빵 함께 제공</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- MAINS -->
+    <div class="section">
+      <span class="section-badge badge-main">🥩 MAINS</span>
+      <h2>메인 요리</h2>
+      <p class="sub">개인별 선택 · 추천 메뉴 3가지 중 1가지를 골라주세요</p>
+      <div class="menu-radio" id="main-group">
+        <label class="menu-option" onclick="sel(this,'main')">
+          <input type="radio" name="main" value="시금치 & 리코타 카넬로니">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Spinach &amp; Ricotta Cannelloni <span class="tag tag-v">채식</span></div>
+            <div class="menu-kr">시금치 &amp; 리코타 카넬로니 (파스타)</div>
+            <div class="menu-desc">토마토 소스 · 믹스 샐러드 채소</div>
+          </div>
+        </label>
+        <label class="menu-option" onclick="sel(this,'main')">
+          <input type="radio" name="main" value="케이준 치킨">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Stuffed Cajun Chicken <span class="tag tag-gf">글루텐프리</span> <span class="tag tag-new">NEW</span></div>
+            <div class="menu-kr">속을 채운 케이준 치킨</div>
+            <div class="menu-desc">각종 피망 · 치즈 · 레몬 드리즐</div>
+          </div>
+        </label>
+        <label class="menu-option" onclick="sel(this,'main')">
+          <input type="radio" name="main" value="바삭한 농어 구이">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Crispy Sea Bass <span class="tag tag-gf">글루텐프리</span></div>
+            <div class="menu-kr">바삭한 농어 구이</div>
+            <div class="menu-desc">으깬 고구마 매쉬 · 매콤한 파인애플 살사</div>
+          </div>
+        </label>
+      </div>
+      <div class="default-notice">
+        🐔 메인을 선택하지 않으시면 <strong>케이준 치킨(Stuffed Cajun Chicken)</strong>으로 자동 배정됩니다!
+      </div>
+    </div>
+
+    <!-- TO FINISH -->
+    <div class="section">
+      <span class="section-badge badge-dessert">🍰 TO FINISH</span>
+      <h2>디저트</h2>
+      <p class="sub">전체 인원 동일 메뉴 · 선호하는 1가지를 골라주세요</p>
+      <div class="menu-radio" id="dessert-group">
+        <label class="menu-option" onclick="sel(this,'dessert')">
+          <input type="radio" name="dessert" value="초콜릿 브라우니">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Chocolate Brownie <span class="tag tag-vg">비건</span></div>
+            <div class="menu-kr">초콜릿 브라우니</div>
+          </div>
+        </label>
+        <label class="menu-option" onclick="sel(this,'dessert')">
+          <input type="radio" name="dessert" value="와플">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Waffles</div>
+            <div class="menu-kr">와플</div>
+            <div class="menu-desc">라즈베리 잼 · 바닐라 크림</div>
+          </div>
+        </label>
+        <label class="menu-option" onclick="sel(this,'dessert')">
+          <input type="radio" name="dessert" value="애플 타르트">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Bramley Apple Tart</div>
+            <div class="menu-kr">브램리 애플 타르트</div>
+          </div>
+        </label>
+        <label class="menu-option" onclick="sel(this,'dessert')">
+          <input type="radio" name="dessert" value="치즈 보드">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Cheese Board</div>
+            <div class="menu-kr">치즈 보드 (모둠 치즈)</div>
+          </div>
+        </label>
+        <label class="menu-option" onclick="sel(this,'dessert')">
+          <input type="radio" name="dessert" value="아이스크림">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Ice Cream <span class="tag tag-gf">글루텐프리</span></div>
+            <div class="menu-kr">아이스크림</div>
+          </div>
+        </label>
+        <label class="menu-option" onclick="sel(this,'dessert')">
+          <input type="radio" name="dessert" value="셔벗">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Sorbets <span class="tag tag-vg">비건</span> <span class="tag tag-gf">글루텐프리</span> <span class="tag tag-new">NEW</span></div>
+            <div class="menu-kr">셔벗</div>
+          </div>
+        </label>
+        <label class="menu-option" onclick="sel(this,'dessert')">
+          <input type="radio" name="dessert" value="차 & 커피">
+          <span class="radio-dot"></span>
+          <div class="menu-info">
+            <div class="menu-en">Tea &amp; Coffee ☕</div>
+            <div class="menu-kr">차 &amp; 커피</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="section input-section">
+      <div class="field">
+        <label>📝 이름 <span style="color:#C8102E">*</span></label>
+        <input type="text" id="input-name" placeholder="이름을 적어주세요">
+      </div>
+      <div class="field">
+        <label>🍴 알레르기 또는 특이사항</label>
+        <input type="text" id="input-allergy" placeholder="예) 견과류 알레르기, 해산물 못 먹어요 등">
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="submit()">제출하기 ✨</button>
+  </div>
+
+  <div id="survey-success" class="hidden">
+    <div class="success-box">
+      <div class="check">🎉</div>
+      <h2>응답 완료!</h2>
+      <p>감사합니다~ 🇬🇧<br>UK에서 맛있는 만찬으로 만나요!</p>
+      <button class="submit-btn" style="max-width:280px;margin:24px auto 0" onclick="reset()">다른 사람 응답하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== RESULTS ========== -->
+<div id="page-results" class="container hidden">
+  <div class="results-header">
+    <h1>📊 실시간 응답 현황</h1>
+    <p>GEP 만찬 메뉴 설문 결과를 실시간으로 확인하세요</p>
+    <div class="stat-count" id="total-count">총 0명 응답</div><br>
+    <button class="refresh-btn" onclick="loadR()">🔄 새로고침</button>
+  </div>
+  <div id="results-content"><div class="no-data" id="no-data">아직 응답이 없습니다. 첫 번째 응답자가 되어보세요! 🙋</div></div>
+  <div id="rcharts" class="hidden">
+    <div class="result-section"><h3>🥗 전채 요리 선호도</h3><div id="cs"></div></div>
+    <div class="result-section"><h3>🥩 메인 요리 선택 현황</h3><div id="cm"></div></div>
+    <div class="result-section"><h3>🍰 디저트 선호도</h3><div id="cd"></div></div>
+    <div class="result-section"><h3>📋 개별 응답 내역</h3><div id="rlist" class="response-list"></div></div>
+  </div>
+</div>
+
+<!-- ========== QR ========== -->
+<div id="page-qr" class="container hidden">
+  <div class="qr-page">
+    <h1>📱 QR코드로 공유하기</h1>
+    <p>아래 QR코드를 스캔하면 설문 페이지로 바로 이동해요!<br>단체 카톡방이나 이메일에 캡처해서 공유하세요 💌</p>
+    <div class="qr-box"><canvas id="qrc" width="200" height="200"></canvas></div>
+    <div class="url-display" id="urlbox"></div><br>
+    <button class="copy-btn" onclick="copyURL()">📋 URL 복사하기</button>
+    <div class="qr-instruction">
+      <h3>💡 활용 방법</h3>
+      <ol>
+        <li>이 HTML 파일을 웹 호스팅에 업로드하세요 (GitHub Pages, Netlify 등 무료!)</li>
+        <li>호스팅된 URL로 QR코드가 자동 생성돼요</li>
+        <li>QR코드를 캡처해서 단체 카톡방에 공유!</li>
+        <li>'결과보기' 탭에서 실시간으로 응답 현황 확인 🎯</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<script>
+const K='gep_dinner_v3';
+function gR(){try{return JSON.parse(localStorage.getItem(K)||'[]')}catch{return[]}}
+function sR(d){const r=gR();d.id=Date.now();d.ts=new Date().toLocaleString('ko-KR');r.push(d);localStorage.setItem(K,JSON.stringify(r))}
+
+function showPage(p){
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav-'+p).classList.add('active');
+  ['survey','results','qr'].forEach(x=>document.getElementById('page-'+x).classList.add('hidden'));
+  document.getElementById('page-'+p).classList.remove('hidden');
+  if(p==='results')loadR();if(p==='qr')genQR();
+}
+
+function sel(el,g){
+  document.querySelectorAll('#'+g+'-group .menu-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');el.querySelector('input').checked=true;
+}
+
+function submit(){
+  const nm=document.getElementById('input-name').value.trim();
+  if(!nm){alert('이름을 입력해주세요! 😊');return;}
+  const s=document.querySelector('input[name="starter"]:checked');
+  const m=document.querySelector('input[name="main"]:checked');
+  const d=document.querySelector('input[name="dessert"]:checked');
+  if(!s){alert('전채 요리를 선택해주세요! 🥗');return;}
+  if(!d){alert('디저트를 선택해주세요! 🍰');return;}
+  sR({name:nm,starter:s.value,main:m?m.value:'케이준 치킨',dessert:d.value,allergy:document.getElementById('input-allergy').value.trim(),def:!m});
+  document.getElementById('survey-form').classList.add('hidden');
+  document.getElementById('survey-success').classList.remove('hidden');
+}
+
+function reset(){
+  document.getElementById('survey-form').classList.remove('hidden');
+  document.getElementById('survey-success').classList.add('hidden');
+  document.getElementById('input-name').value='';document.getElementById('input-allergy').value='';
+  document.querySelectorAll('.menu-option').forEach(o=>o.classList.remove('selected'));
+  document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=false);
+  window.scrollTo(0,0);
+}
+
+function loadR(){
+  const rs=gR(),t=rs.length;
+  document.getElementById('total-count').textContent='총 '+t+'명 응답';
+  if(!t){document.getElementById('no-data').classList.remove('hidden');document.getElementById('rcharts').classList.add('hidden');return;}
+  document.getElementById('no-data').classList.add('hidden');document.getElementById('rcharts').classList.remove('hidden');
+  const sc={},mc={},dc={};
+  rs.forEach(r=>{sc[r.starter]=(sc[r.starter]||0)+1;mc[r.main]=(mc[r.main]||0)+1;dc[r.dessert]=(dc[r.dessert]||0)+1;});
+  bar('cs',sc,t,'starter');bar('cm',mc,t,'main');bar('cd',dc,t,'dessert');
+  document.getElementById('rlist').innerHTML=rs.slice().reverse().map(r=>`
+    <div class="response-card">
+      <div class="rname">${esc(r.name)} ${r.def?'<span style="font-size:11px;color:#3a6bd5">(메인 미선택→치킨🐔)</span>':''}</div>
+      <div class="rdetail">🥗 ${esc(r.starter)} · 🥩 ${esc(r.main)} · 🍰 ${esc(r.dessert)}${r.allergy?'<br>⚠️ '+esc(r.allergy):''}</div>
+    </div>`).join('');
+}
+
+function bar(id,c,t,type){
+  document.getElementById(id).innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([n,v])=>{
+    const p=Math.round(v/t*100);
+    return`<div class="bar-row"><div class="bar-label"><span class="name">${esc(n)}</span><span class="count">${v}명 (${p}%)</span></div><div class="bar-track"><div class="bar-fill ${type}" style="width:${Math.max(p,5)}%">${p>15?p+'%':''}</div></div></div>`;
+  }).join('');
+}
+
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+function genQR(){
+  const url=window.location.href;document.getElementById('urlbox').textContent=url;
+  const cv=document.getElementById('qrc'),ctx=cv.getContext('2d'),sz=200;cv.width=sz;cv.height=sz;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,sz,sz);
+  const m=6,mods=Math.floor(sz/m),h=url+'gepUK';
+  let seed=0;for(let i=0;i<h.length;i++)seed=((seed<<5)-seed)+h.charCodeAt(i);
+  function prng(){seed=(seed*16807)%2147483647;return(seed-1)/2147483646;}
+  function finder(x,y){ctx.fillStyle='#3a6bd5';ctx.fillRect(x,y,7*m,7*m);ctx.fillStyle='#fff';ctx.fillRect(x+m,y+m,5*m,5*m);ctx.fillStyle='#3a6bd5';ctx.fillRect(x+2*m,y+2*m,3*m,3*m);}
+  finder(0,0);finder(0,(mods-7)*m);finder((mods-7)*m,0);
+  ctx.fillStyle='#3a6bd5';
+  for(let r=0;r<mods;r++)for(let c=0;c<mods;c++){if(r<8&&c<8)continue;if(r<8&&c>=mods-8)continue;if(r>=mods-8&&c<8)continue;if(prng()>0.55)ctx.fillRect(c*m,r*m,m,m);}
+}
+
+function copyURL(){
+  navigator.clipboard.writeText(window.location.href).then(()=>{
+    const b=document.querySelector('.copy-btn');b.textContent='✅ 복사 완료!';setTimeout(()=>b.textContent='📋 URL 복사하기',2000);
+  }).catch(()=>prompt('URL을 복사해주세요:',window.location.href));
+}
+
+window.addEventListener('DOMContentLoaded',()=>showPage('survey'));
+</script>
+</body>
+</html>
