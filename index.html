@@ -580,9 +580,14 @@ async function submitSurvey() {
 
   try {
     if (isAPIConfigured) {
-      // Google Apps Script API로 전송
+      // Image 방식으로 전송 (CORS 이슈 없음)
       const url = API_URL + '?action=submit&data=' + encodeURIComponent(JSON.stringify(data));
-      await fetch(url, { redirect: 'follow' });
+      await new Promise(resolve => {
+        const img = new Image();
+        img.onload = img.onerror = () => resolve();
+        img.src = url;
+        setTimeout(resolve, 3000); // 3초 타임아웃
+      });
     }
     // 로컬에도 백업 저장
     saveLocal(data);
@@ -613,6 +618,29 @@ function getLocal() {
 }
 
 // ===== Results (API에서 불러오기) =====
+// ===== JSONP 방식으로 결과 불러오기 (CORS 우회) =====
+function loadResultsJSONP() {
+  return new Promise((resolve, reject) => {
+    const cbName = 'gepCb_' + Date.now();
+    const timeout = setTimeout(() => {
+      delete window[cbName];
+      reject(new Error('timeout'));
+    }, 8000);
+
+    window[cbName] = function(data) {
+      clearTimeout(timeout);
+      delete window[cbName];
+      resolve(data);
+    };
+
+    const script = document.createElement('script');
+    script.src = API_URL + '?action=results&callback=' + cbName;
+    script.onerror = () => { clearTimeout(timeout); reject(new Error('load error')); };
+    document.head.appendChild(script);
+    script.onload = () => document.head.removeChild(script);
+  });
+}
+
 async function loadResults() {
   const dot = document.getElementById('api-dot');
   const txt = document.getElementById('api-text');
@@ -629,17 +657,14 @@ async function loadResults() {
 
   if (isAPIConfigured) {
     try {
-      const res = await fetch(API_URL + '?action=results');
-      const json = await res.json();
+      const json = await loadResultsJSONP();
       responses = json.responses || [];
       dot.className = 'api-dot online'; txt.textContent = '서버 연결됨 ✓';
     } catch (err) {
-      // API 실패 시 로컬 데이터 사용
       responses = getLocal();
       dot.className = 'api-dot offline'; txt.textContent = '서버 연결 실패 (로컬 데이터 표시 중)';
     }
   } else {
-    // API 미설정 → 로컬 데이터
     responses = getLocal();
     dot.className = 'api-dot offline'; txt.textContent = 'API 미설정 (로컬 데이터만 표시)';
   }
